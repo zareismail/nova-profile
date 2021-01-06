@@ -29,8 +29,9 @@
       </div>
       <div class="w-4/5 flex flex-wrap">
         <div 
-          class="flex flex-wrap px-1 py-4 w-1/3 justify-between" 
+          class="flex flex-wrap px-1 py-4 w-1/2 justify-between" 
           v-for="field in fields"
+          :class="{'w-full': field.fullwidth}"
         >
           <h4>{{ field.name }}:</h4>
           <component 
