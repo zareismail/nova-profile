@@ -1,6 +1,6 @@
 <template>
   <loading-view :loading="loading">
-    <card class="flex flex-wrap p-8 items-center"> 
+    <profile-card :resource="resource" :resource-id="resourceId" :resource-name="resourceName"> 
       <div class="w-1/5"> 
         <img :src="card.avatar" class="rounded-full avatar">
         
@@ -32,25 +32,33 @@
           class="flex flex-wrap px-1 py-4 w-1/2 justify-between" 
           v-for="field in fields"
           :class="{'w-full': field.fullwidth}"
+          :class="field.width"
         >
-          <h4>{{ field.name }}:</h4>
+          <h4 v-if="! field.withoutLabel">{{ field.name }}:</h4>
           <component 
+            class="px-8 text-80"
             :key="field.name"
             :is="`index-` + field.component"
             :field="field"
-            class="px-8 text-80"
+            :resource="resource"
+            :resource-id="resourceId"
+            :resource-name="resourceName"
           />
         </div>  
       </div>
-    </card>
+    </profile-card>
   </loading-view>
 </template>
 
 <script>
-import {  
-  Minimum, 
-} from 'laravel-nova'
+import { Minimum } from 'laravel-nova'
+import ProfileCard from './ProfileCard.vue'
+
 export default {
+  components: {
+    ProfileCard: ProfileCard
+  },
+
   props: [
       'card',
 
@@ -75,6 +83,7 @@ export default {
      */
     async getResource() {
       this.resource = null
+      this.loading = true
 
       return Minimum(
         Nova.request().get(
